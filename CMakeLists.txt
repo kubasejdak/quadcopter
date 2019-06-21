@@ -23,6 +23,7 @@ add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 #    coverage_addTarget(${COVERAGE_IGNORE})
 #endif()
 
+add_subdirectory(app)
 add_subdirectory(hal)
 
 #if(QUADCOPTER_TESTS)
@@ -36,9 +37,3 @@ add_subdirectory(hal)
 #    utils_log("Building quadcopter with docs")
 #    doxygen_addTarget(${PROJECT_SOURCE_DIR})
 #endif()
-
-add_executable(quadcopter main.cpp)
-
-target_link_libraries(quadcopter
-    PRIVATE hal
-)

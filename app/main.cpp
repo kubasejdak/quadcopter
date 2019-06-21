@@ -34,9 +34,11 @@
 
 #include <system_error>
 
-//int main(int argc, char* argv[])
-int main()
+int main(int argc, char* argv[])
 {
+    (void) argc;
+    (void) argv;
+
     std::error_code er = hal::Error::eDeviceOpened;
     printf("[%s] %s\n", er.category().name(), er.message().c_str());
     return 0;
