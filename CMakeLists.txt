@@ -10,10 +10,14 @@ option(QUADCOPTER_COVERAGE "Generate coverage report" OFF)
 option(QUADCOPTER_TESTS "Build unit tests" OFF)
 option(QUADCOPTER_DOCS "Generate doxygen documentation" OFF)
 
+if (NOT PRODUCT)
+    set(PRODUCT quadcopter_rpi)
+endif ()
+
 # Common compilation flags.
-if(NOT CMAKE_BUILD_TYPE)
+if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
-endif()
+endif ()
 
 add_compile_options(-std=c++17 -Wall -Wextra -Wpedantic -Werror)
 

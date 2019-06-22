@@ -36,10 +36,7 @@
 
 namespace hal {
 
-enum class SharingPolicy {
-    eSingle,
-    eShared
-};
+enum class SharingPolicy { eSingle, eShared };
 
 class Device {
 public:

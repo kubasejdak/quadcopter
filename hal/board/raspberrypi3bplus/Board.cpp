@@ -30,6 +30,22 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Device.hpp"
+#include "raspberrypi3bplus/Board.hpp"
 
-namespace hal {} // namespace hal
+namespace hal {
+namespace detail {
+
+std::shared_ptr<Device> GetDeviceImpl(device_id::RaspberryPi3BPlusId id)
+{
+    return RaspberryPi3BPlus::instance().getDevice(id);
+}
+
+} // namespace detail
+
+RaspberryPi3BPlus& RaspberryPi3BPlus::instance()
+{
+    static RaspberryPi3BPlus object;
+    return object;
+}
+
+} // namespace hal

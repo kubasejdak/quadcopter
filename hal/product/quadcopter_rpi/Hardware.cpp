@@ -30,6 +30,15 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Device.hpp"
+#include "hal/Hardware.hpp"
 
-namespace hal {} // namespace hal
+#include "raspberrypi3bplus/Board.hpp"
+
+namespace hal {
+
+void Hardware::createBoards()
+{
+    m_boards.insert({Type::eBase, RaspberryPi3BPlus::instance()});
+}
+
+} // namespace hal

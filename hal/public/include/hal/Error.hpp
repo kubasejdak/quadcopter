@@ -37,12 +37,7 @@
 
 namespace hal {
 
-enum class Error {
-    eOk,
-    eWrongState,
-    eDeviceOpened,
-    eDeviceNotOpened
-};
+enum class Error { eOk, eWrongState, eDeviceOpened, eDeviceNotOpened };
 
 std::error_code make_error_code(Error);
 

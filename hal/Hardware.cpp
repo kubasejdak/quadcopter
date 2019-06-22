@@ -47,7 +47,7 @@ std::error_code Hardware::init()
     auto baseRange = m_boards.equal_range(Type::eBase);
     for (auto i = baseRange.first; i != baseRange.second; ++i) {
         auto& board = i->second;
-        if (auto error = board->init())
+        if (auto error = board.init())
             return error;
     }
 
@@ -63,7 +63,7 @@ std::error_code Hardware::attach()
     auto removableRange = m_boards.equal_range(Type::eRemovable);
     for (auto i = removableRange.first; i != removableRange.second; ++i) {
         auto& board = i->second;
-        if (auto error = board->init())
+        if (auto error = board.init())
             return error;
     }
 
@@ -79,7 +79,7 @@ std::error_code Hardware::detach()
     auto removableRange = m_boards.equal_range(Type::eRemovable);
     for (auto i = removableRange.first; i != removableRange.second; ++i) {
         auto& board = i->second;
-        if (auto error = board->deinit())
+        if (auto error = board.deinit())
             return error;
     }
 

@@ -30,6 +30,14 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Device.hpp"
+#include "hal/Error.hpp"
+#include "raspberrypi3bplus/Board.hpp"
 
-namespace hal {} // namespace hal
+namespace hal {
+
+std::error_code RaspberryPi3BPlus::initImpl()
+{
+    return Error::eOk;
+}
+
+} // namespace hal

@@ -37,8 +37,8 @@
 namespace hal {
 
 struct ErrorCategory : std::error_category {
-    const char* name() const noexcept override;
-    std::string message(int value) const override;
+    [[nodiscard]] const char* name() const noexcept override;
+    [[nodiscard]] std::string message(int value) const override;
 };
 
 const char* ErrorCategory::name() const noexcept

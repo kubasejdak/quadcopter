@@ -30,6 +30,27 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Device.hpp"
+#pragma once
 
-namespace hal {} // namespace hal
+#include <memory>
+
+namespace hal {
+namespace device_id {
+
+enum RaspberryPi3BPlusId { eRaspberryPi3BPlusActLed };
+
+} // namespace device_id
+
+namespace detail {
+
+std::shared_ptr<Device> GetDeviceImpl(device_id::RaspberryPi3BPlusId id);
+
+} // namespace detail
+
+template <typename T>
+std::shared_ptr<T> GetDevice(device_id::RaspberryPi3BPlusId id)
+{
+    return std::dynamic_pointer_cast<T>(detail::GetDeviceImpl(id));
+}
+
+} // namespace hal

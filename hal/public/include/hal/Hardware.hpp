@@ -33,7 +33,6 @@
 #pragma once
 
 #include <map>
-#include <memory>
 #include <system_error>
 
 namespace hal {
@@ -51,21 +50,12 @@ private:
     static void createBoards();
 
 private:
-    enum class State
-    {
-        eUninitialized,
-        eAttached,
-        eDetached
-    };
+    enum class State { eUninitialized, eAttached, eDetached };
 
-    enum class Type
-    {
-        eBase,
-        eRemovable
-    };
+    enum class Type { eBase, eRemovable };
 
     static inline State m_state = State::eUninitialized;
-    static inline std::multimap<Type, std::unique_ptr<IBoard>> m_boards;
+    static inline std::multimap<Type, IBoard&> m_boards;
 };
 
 } // namespace hal

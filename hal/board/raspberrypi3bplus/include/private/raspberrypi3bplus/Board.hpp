@@ -30,6 +30,19 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Device.hpp"
+#pragma once
 
-namespace hal {} // namespace hal
+#include "hal/ISimpleBoard.hpp"
+#include "raspberrypi3bplus/DeviceId.hpp"
+
+namespace hal {
+
+class RaspberryPi3BPlus : public ISimpleBoard<device_id::RaspberryPi3BPlusId> {
+public:
+    static RaspberryPi3BPlus& instance();
+
+private:
+    std::error_code initImpl() override;
+};
+
+} // namespace hal

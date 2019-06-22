@@ -32,10 +32,6 @@
 
 #pragma once
 
-#include "hal/Device.hpp"
-
-#include <map>
-#include <memory>
 #include <system_error>
 
 namespace hal {
@@ -44,9 +40,6 @@ class IBoard {
 public:
     virtual std::error_code init() = 0;
     virtual std::error_code deinit() = 0;
-
-protected:
-    std::map<int, std::shared_ptr<Device>> m_devices;
 };
 
 } // namespace hal

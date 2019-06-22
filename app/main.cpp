@@ -30,16 +30,15 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include <hal/Error.hpp>
-
-#include <system_error>
+#include <hal/Hardware.hpp>
 
 int main(int argc, char* argv[])
 {
     (void) argc;
     (void) argv;
 
-    std::error_code er = hal::Error::eDeviceOpened;
-    printf("[%s] %s\n", er.category().name(), er.message().c_str());
+    hal::Hardware::init();
+    hal::Hardware::attach();
+
     return 0;
 }

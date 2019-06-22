@@ -30,6 +30,44 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Device.hpp"
+#pragma once
 
-namespace hal {} // namespace hal
+#include "hal/Device.hpp"
+#include "hal/Error.hpp"
+#include "hal/IBoard.hpp"
+
+#include <map>
+#include <memory>
+#include <system_error>
+
+namespace hal {
+
+template <typename IdType>
+class ISimpleBoard : public IBoard {
+public:
+    std::shared_ptr<Device> getDevice(IdType id)
+    {
+        if (m_devices.find(id) == std::end(m_devices))
+            return nullptr;
+
+        return m_devices[id];
+    }
+
+private:
+    std::error_code init() override
+    {
+        if (auto error = initImpl())
+            return error;
+
+        return Error::eOk;
+    }
+
+    std::error_code deinit() override { return Error::eOk; }
+
+    virtual std::error_code initImpl() = 0;
+
+protected:
+    std::map<IdType, std::shared_ptr<Device>> m_devices;
+};
+
+} // namespace hal
