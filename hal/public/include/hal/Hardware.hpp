@@ -32,25 +32,40 @@
 
 #pragma once
 
+#include <map>
+#include <memory>
 #include <system_error>
-#include <type_traits>
 
 namespace hal {
 
-enum class Error {
-    eOk,
-    eWrongState,
-    eDeviceOpened,
-    eDeviceNotOpened
+class IBoard;
+
+class Hardware {
+public:
+    static std::error_code init();
+    static std::error_code attach();
+    static std::error_code detach();
+
+private:
+    Hardware() = default;
+    static void createBoards();
+
+private:
+    enum class State
+    {
+        eUninitialized,
+        eAttached,
+        eDetached
+    };
+
+    enum class Type
+    {
+        eBase,
+        eRemovable
+    };
+
+    static inline State m_state = State::eUninitialized;
+    static inline std::multimap<Type, std::unique_ptr<IBoard>> m_boards;
 };
 
-std::error_code make_error_code(Error);
-
 } // namespace hal
-
-namespace std {
-
-template <>
-struct is_error_code_enum<hal::Error> : true_type {};
-
-} // namespace std

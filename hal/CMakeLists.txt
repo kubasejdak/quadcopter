@@ -1,8 +1,11 @@
-add_library(hal INTERFACE
+add_library(hal EXCLUDE_FROM_ALL
+    Hardware.cpp
 )
 
+add_subdirectory(private)
 add_subdirectory(public)
 
 target_link_libraries(hal
-    INTERFACE hal_public
+    PUBLIC hal_public
+    PRIVATE hal_private
 )

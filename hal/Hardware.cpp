@@ -30,27 +30,61 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "hal/Hardware.hpp"
 
-#include <system_error>
-#include <type_traits>
+#include "hal/Error.hpp"
+#include "hal/IBoard.hpp"
 
 namespace hal {
 
-enum class Error {
-    eOk,
-    eWrongState,
-    eDeviceOpened,
-    eDeviceNotOpened
-};
+std::error_code Hardware::init()
+{
+    if (m_state != State::eUninitialized)
+        return Error::eWrongState;
 
-std::error_code make_error_code(Error);
+    createBoards();
+
+    auto baseRange = m_boards.equal_range(Type::eBase);
+    for (auto i = baseRange.first; i != baseRange.second; ++i) {
+        auto& board = i->second;
+        if (auto error = board->init())
+            return error;
+    }
+
+    m_state = State::eDetached;
+    return Error::eOk;
+}
+
+std::error_code Hardware::attach()
+{
+    if (m_state != State::eDetached)
+        return Error::eWrongState;
+
+    auto removableRange = m_boards.equal_range(Type::eRemovable);
+    for (auto i = removableRange.first; i != removableRange.second; ++i) {
+        auto& board = i->second;
+        if (auto error = board->init())
+            return error;
+    }
+
+    m_state = State::eDetached;
+    return Error::eOk;
+}
+
+std::error_code Hardware::detach()
+{
+    if (m_state != State::eAttached)
+        return Error::eWrongState;
+
+    auto removableRange = m_boards.equal_range(Type::eRemovable);
+    for (auto i = removableRange.first; i != removableRange.second; ++i) {
+        auto& board = i->second;
+        if (auto error = board->deinit())
+            return error;
+    }
+
+    m_state = State::eDetached;
+    return Error::eOk;
+}
 
 } // namespace hal
-
-namespace std {
-
-template <>
-struct is_error_code_enum<hal::Error> : true_type {};
-
-} // namespace std

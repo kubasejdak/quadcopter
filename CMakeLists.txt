@@ -15,7 +15,7 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Debug)
 endif()
 
-add_compile_options(-Wall -Wextra -Wpedantic -Werror)
+add_compile_options(-std=c++17 -Wall -Wextra -Wpedantic -Werror)
 
 #if(QUADCOPTER_COVERAGE)
 #    utils_log("Building quadcopter with coverage report")

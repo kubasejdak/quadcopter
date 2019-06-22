@@ -32,25 +32,21 @@
 
 #pragma once
 
+#include "hal/Device.hpp"
+
+#include <map>
+#include <memory>
 #include <system_error>
-#include <type_traits>
 
 namespace hal {
 
-enum class Error {
-    eOk,
-    eWrongState,
-    eDeviceOpened,
-    eDeviceNotOpened
+class IBoard {
+public:
+    virtual std::error_code init() = 0;
+    virtual std::error_code deinit() = 0;
+
+protected:
+    std::map<int, std::shared_ptr<Device>> m_devices;
 };
 
-std::error_code make_error_code(Error);
-
 } // namespace hal
-
-namespace std {
-
-template <>
-struct is_error_code_enum<hal::Error> : true_type {};
-
-} // namespace std
