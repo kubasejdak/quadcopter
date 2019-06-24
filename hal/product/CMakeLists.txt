@@ -1,15 +1,15 @@
 add_library(product EXCLUDE_FROM_ALL
     ${PRODUCT}/Hardware.cpp
-    )
+)
 
 target_include_directories(product
     PUBLIC ${PRODUCT}/include/
-    )
+)
 
 target_link_libraries(product
     PUBLIC board_public
     PRIVATE hal_public board_private
-    )
+)
 
 add_subdirectory(${PRODUCT})
 

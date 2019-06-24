@@ -44,15 +44,6 @@ namespace hal {
 
 template <typename IdType>
 class ISimpleBoard : public IBoard {
-public:
-    std::shared_ptr<Device> getDevice(IdType id)
-    {
-        if (m_devices.find(id) == std::end(m_devices))
-            return nullptr;
-
-        return m_devices[id];
-    }
-
 private:
     std::error_code init() override
     {
@@ -62,7 +53,30 @@ private:
         return Error::eOk;
     }
 
-    std::error_code deinit() override { return Error::eOk; }
+    std::error_code deinit() override
+    {
+        for (const auto& pair : m_devices) {
+            // TODO: use boost::adaptors.
+            const auto& device = pair.second;
+            if (device->ownersCount() != 0) {
+                return Error::eDeviceTaken;
+            }
+        }
+
+        m_devices.clear();
+        return Error::eOk;
+    }
+
+    std::shared_ptr<Device> getDeviceImpl(int id) override
+    {
+        auto deviceId = static_cast<IdType>(id);
+        if (m_devices.find(deviceId) == std::end(m_devices))
+            return nullptr;
+
+        return m_devices[deviceId];
+    }
+
+    std::error_code returnDeviceImpl(std::shared_ptr<Device>&) override { return Error::eOk; }
 
     virtual std::error_code initImpl() = 0;
 

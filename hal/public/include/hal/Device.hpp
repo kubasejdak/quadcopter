@@ -33,17 +33,34 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
+#include <system_error>
 
 namespace hal {
 
 enum class SharingPolicy { eSingle, eShared };
 
+class IBoard;
+
 class Device {
+    friend class IBoard;
+    friend std::error_code returnDevice(std::shared_ptr<Device>& device);
+
 public:
-    Device() = default;
+    Device(SharingPolicy sharingPolicy, IBoard& board);
+    std::size_t ownersCount() const { return m_ownersCount; }
 
 private:
+    std::error_code take();
+    std::error_code give();
+    IBoard& board() const { return m_board; }
+
+private:
+    SharingPolicy m_sharingPolicy;
+    IBoard& m_board;
     std::size_t m_ownersCount{};
 };
+
+std::error_code returnDevice(std::shared_ptr<Device>& device);
 
 } // namespace hal

@@ -32,6 +32,10 @@
 
 #pragma once
 
+#include "hal/Device.hpp"
+#include "hal/Error.hpp"
+
+#include <memory>
 #include <system_error>
 
 namespace hal {
@@ -40,6 +44,29 @@ class IBoard {
 public:
     virtual std::error_code init() = 0;
     virtual std::error_code deinit() = 0;
+
+    template <typename IdType>
+    std::shared_ptr<Device> getDevice(IdType id)
+    {
+        if (auto device = getDeviceImpl(id)) {
+            if (auto error = device->take())
+                return nullptr;
+        }
+
+        return nullptr;
+    }
+
+    std::error_code returnDevice(std::shared_ptr<Device>& device)
+    {
+        if (auto error = returnDeviceImpl(device))
+            return error;
+
+        return device->give();
+    }
+
+private:
+    virtual std::shared_ptr<Device> getDeviceImpl(int id) = 0;
+    virtual std::error_code returnDeviceImpl(std::shared_ptr<Device>& device) = 0;
 };
 
 } // namespace hal

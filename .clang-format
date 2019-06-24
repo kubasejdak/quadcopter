@@ -22,7 +22,7 @@ AlwaysBreakTemplateDeclarations: true
 BinPackArguments: false
 BinPackParameters: false
 BraceWrapping:
-#  AfterCaseLabel: false
+  #AfterCaseLabel: false
   AfterClass: false
   AfterControlStatement: false
   AfterEnum: false
