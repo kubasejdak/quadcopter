@@ -44,7 +44,6 @@ class IBoard;
 
 class Device {
     friend class IBoard;
-    friend std::error_code returnDevice(std::shared_ptr<Device>& device);
 
 public:
     Device(SharingPolicy sharingPolicy, IBoard& board);

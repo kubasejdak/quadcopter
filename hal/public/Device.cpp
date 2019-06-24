@@ -68,7 +68,7 @@ std::error_code returnDevice(std::shared_ptr<Device>& device)
     if (device->ownersCount() == 0)
         return Error::eDeviceNotTaken;
 
-    if (auto error = device->board().returnDevice(device))
+    if (auto error = IBoard::GetBoard(device).returnDevice(device))
         return error;
 
     device.reset();

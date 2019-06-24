@@ -64,6 +64,8 @@ public:
         return device->give();
     }
 
+    static IBoard& GetBoard(const std::shared_ptr<Device>& device) { return device->board(); }
+
 private:
     virtual std::shared_ptr<Device> getDeviceImpl(int id) = 0;
     virtual std::error_code returnDeviceImpl(std::shared_ptr<Device>& device) = 0;
