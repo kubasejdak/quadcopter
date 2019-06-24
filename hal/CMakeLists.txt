@@ -19,10 +19,10 @@ target_link_libraries(hal
 )
 
 # Print HAL configuration.
-message(STATUS "-------------------------------------------")
-message(STATUS "HAL configuration:")
-message(STATUS "  product  : ${PRODUCT}")
-message(STATUS "  platform : ${PLATFORM}")
+utils_log("-------------------------------------------")
+utils_log("HAL configuration:")
+utils_log("  product  : ${PRODUCT}")
+utils_log("  platform : ${PLATFORM}")
 string(REPLACE ";" " " BOARDS_STR "${BOARDS}")
-message(STATUS "  boards   : ${BOARDS_STR}")
-message(STATUS "-------------------------------------------")
+utils_log("  boards   : ${BOARDS_STR}")
+utils_log("-------------------------------------------")
