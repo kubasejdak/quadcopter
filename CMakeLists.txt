@@ -4,6 +4,18 @@ include(tools/cmake/all.cmake)
 utils_getVersion(VERSION)
 project(quadcopter VERSION ${VERSION} LANGUAGES CXX)
 
+# Add conan files.
+if (EXISTS ${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
+    include(${PROJECT_BINARY_DIR}/conanbuildinfo.cmake)
+    conan_basic_setup()
+endif ()
+
+# Configure external libraries.
+find_package(Boost 1.70)
+if (NOT Boost_FOUND)
+    utils_error("Boost not found")
+endif ()
+
 # Project options.
 option(QUADCOPTER_COVERAGE "Generate coverage report" OFF)
 option(QUADCOPTER_TESTS "Build unit tests" OFF)
