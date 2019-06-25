@@ -34,10 +34,13 @@
 
 #include <hal/Hardware.hpp>
 
+#include <CLI/CLI.hpp>
+
 int main(int argc, char* argv[])
 {
-    (void) argc;
-    (void) argv;
+    CLI::App app;
+    CLI11_PARSE(app, argc, argv)
+
     (void) cQuadcopterVersion;
 
     hal::Hardware::init();

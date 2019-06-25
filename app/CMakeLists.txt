@@ -4,7 +4,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in ${CMAKE_CURRENT_SOURCE
 add_executable(quadcopter main.cpp)
 
 target_link_libraries(quadcopter
-    PRIVATE hal
+    PRIVATE CLI11::CLI11 hal
 )
 
 toolchain_setTargetOutputPath(quadcopter ${PROJECT_BINARY_DIR}/bin)

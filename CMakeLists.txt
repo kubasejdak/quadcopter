@@ -15,6 +15,10 @@ find_package(Boost 1.70)
 if (NOT Boost_FOUND)
     utils_error("Boost not found")
 endif ()
+find_package(CLI11 CONFIG)
+if (NOT CLI11_FOUND)
+    utils_error("CLI11 not found")
+endif ()
 
 # Project options.
 option(QUADCOPTER_COVERAGE "Generate coverage report" OFF)
@@ -32,24 +36,24 @@ endif ()
 
 add_compile_options(-std=c++17 -Wall -Wextra -Wpedantic -Werror)
 
-if(QUADCOPTER_COVERAGE)
+if (QUADCOPTER_COVERAGE)
     utils_log("Building quadcopter with coverage report")
     set(COVERAGE_IGNORE '${PROJECT_SOURCE_DIR}/test/*' '${PROJECT_SOURCE_DIR}/lib/*')
     coverage_addTarget(${COVERAGE_IGNORE})
-endif()
+endif ()
 
 toolchain_showConfig()
 
 add_subdirectory(app)
 add_subdirectory(hal)
 
-if(QUADCOPTER_TESTS)
+if (QUADCOPTER_TESTS)
     utils_log("Building quadcopter with tests")
     enable_testing()
     add_subdirectory(test)
-endif()
+endif ()
 
-if(QUADCOPTER_DOCS)
+if (QUADCOPTER_DOCS)
     utils_log("Building quadcopter with docs")
     doxygen_addTarget(${PROJECT_SOURCE_DIR})
-endif()
+endif ()
