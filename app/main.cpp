@@ -36,15 +36,21 @@
 
 #include <CLI/CLI.hpp>
 
+#include <cstdio>
+#include <cstdlib>
+
 int main(int argc, char* argv[])
 {
     CLI::App app;
-    CLI11_PARSE(app, argc, argv)
+    app.add_flag_callback("-v,--version", []() {
+        std::printf("%s\n", cQuadcopterVersion);
+        std::exit(EXIT_SUCCESS);
+    });
 
-    (void) cQuadcopterVersion;
+    CLI11_PARSE(app, argc, argv)
 
     hal::Hardware::init();
     hal::Hardware::attach();
 
-    return 0;
+    return EXIT_SUCCESS;
 }
