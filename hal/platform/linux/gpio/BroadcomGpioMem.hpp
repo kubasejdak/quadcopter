@@ -30,14 +30,31 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Error.hpp"
-#include "raspberrypi3bplus/Board.hpp"
+#pragma once
 
-namespace hal {
+#include "hal/gpio/IGpioPort.hpp"
 
-std::error_code RaspberryPi3BPlus::initImpl()
-{
-    return Error::eOk;
-}
+#include <cstdint>
 
-} // namespace hal
+namespace hal::gpio {
+
+enum class BroadcomGpioInstance { eGpio0, eGpio1 };
+
+class BroadcomGpioMem : public IGpioPort<std::uint32_t, Access::eReadWrite> {
+public:
+    /// Constructor.
+    /// @param instance         GPIO port instance.
+    explicit BroadcomGpioMem(BroadcomGpioInstance instance);
+
+private:
+    /// @see IGpioPort::drvRead().
+    std::error_code drvRead(std::uint32_t& value, std::uint32_t mask) override;
+
+    /// @see IGpioPort::drvWrite().
+    std::error_code drvWrite(std::uint32_t value, std::uint32_t mask) override;
+
+private:
+    BroadcomGpioInstance m_instance;
+};
+
+} // namespace hal::gpio

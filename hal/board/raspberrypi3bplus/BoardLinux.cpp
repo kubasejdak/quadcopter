@@ -30,37 +30,21 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-#include <cstdint>
-#include <memory>
-#include <system_error>
+#include "BroadcomGpioMem.hpp"
+#include "hal/Error.hpp"
+#include "hal/gpio/PinInput.hpp"
+#include "hal/gpio/PinOutput.hpp"
+#include "raspberrypi3bplus/Board.hpp"
 
 namespace hal {
 
-enum class SharingPolicy { eSingle, eShared };
+std::error_code RaspberryPi3BPlus::initImpl()
+{
+    // clang-format off
+    gpio::BroadcomGpioMem gpio(gpio::BroadcomGpioInstance::eGpio0);
+    // clang-format on
 
-class IBoard;
-
-class Device {
-    friend class IBoard;
-
-public:
-    explicit Device(SharingPolicy sharingPolicy);
-    [[nodiscard]] std::size_t ownersCount() const { return m_ownersCount; }
-
-private:
-    std::error_code take();
-    std::error_code give();
-    void setBoard(IBoard* board) { m_board = board; }
-    [[nodiscard]] IBoard* board() const { return m_board; }
-
-private:
-    SharingPolicy m_sharingPolicy;
-    IBoard* m_board{};
-    std::size_t m_ownersCount{};
-};
-
-std::error_code returnDevice(std::shared_ptr<Device>& device);
+    return Error::eOk;
+}
 
 } // namespace hal

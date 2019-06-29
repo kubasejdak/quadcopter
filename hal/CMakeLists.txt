@@ -4,11 +4,13 @@ endif ()
 
 add_library(hal EXCLUDE_FROM_ALL
     Hardware.cpp
+    ReturnDevice.cpp
 )
 
 # Product has to be added first, because it configures the required boards and platform implementation.
 add_subdirectory(product)
 add_subdirectory(board)
+add_subdirectory(platform)
 add_subdirectory(private)
 add_subdirectory(public)
 

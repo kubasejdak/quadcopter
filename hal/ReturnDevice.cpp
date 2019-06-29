@@ -30,37 +30,25 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
-
-#include <cstdint>
-#include <memory>
-#include <system_error>
+#include "hal/Device.hpp"
+#include "hal/Error.hpp"
+#include "hal/IBoard.hpp"
 
 namespace hal {
 
-enum class SharingPolicy { eSingle, eShared };
+std::error_code returnDevice(std::shared_ptr<Device>& device)
+{
+    if (!device)
+        return Error::eInvalidArgument;
 
-class IBoard;
+    if (device->ownersCount() == 0)
+        return Error::eDeviceNotTaken;
 
-class Device {
-    friend class IBoard;
+    if (auto error = IBoard::getBoard(device)->returnDevice(device))
+        return error;
 
-public:
-    explicit Device(SharingPolicy sharingPolicy);
-    [[nodiscard]] std::size_t ownersCount() const { return m_ownersCount; }
-
-private:
-    std::error_code take();
-    std::error_code give();
-    void setBoard(IBoard* board) { m_board = board; }
-    [[nodiscard]] IBoard* board() const { return m_board; }
-
-private:
-    SharingPolicy m_sharingPolicy;
-    IBoard* m_board{};
-    std::size_t m_ownersCount{};
-};
-
-std::error_code returnDevice(std::shared_ptr<Device>& device);
+    device.reset();
+    return Error::eOk;
+}
 
 } // namespace hal

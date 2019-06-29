@@ -34,7 +34,6 @@
 
 #include "hal/Device.hpp"
 #include "hal/Error.hpp"
-#include "hal/gpio/IGpioPort.h"
 
 #include <memory>
 #include <system_error>
@@ -65,7 +64,10 @@ public:
         return device->give();
     }
 
-    static IBoard& GetBoard(const std::shared_ptr<Device>& device) { return device->board(); }
+    static IBoard* getBoard(const std::shared_ptr<Device>& device) { return device->board(); }
+
+protected:
+    void setBoard(std::shared_ptr<Device>& device) { device->setBoard(this); }
 
 private:
     virtual std::shared_ptr<Device> getDeviceImpl(int id) = 0;

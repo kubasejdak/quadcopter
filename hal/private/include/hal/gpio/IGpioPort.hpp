@@ -33,7 +33,7 @@
 #pragma once
 
 #include "hal/Error.hpp"
-#include "hal/gpio/types.h"
+#include "hal/gpio/types.hpp"
 
 #include <system_error>
 #include <type_traits>

@@ -36,6 +36,8 @@
 #include "hal/Error.hpp"
 #include "hal/IBoard.hpp"
 
+#include <boost/range/adaptors.hpp>
+
 #include <map>
 #include <memory>
 #include <system_error>
@@ -50,17 +52,17 @@ private:
         if (auto error = initImpl())
             return error;
 
+        for (auto& device : m_devices | boost::adaptors::map_values)
+            setBoard(device);
+
         return Error::eOk;
     }
 
     std::error_code deinit() override
     {
-        for (const auto& pair : m_devices) {
-            // TODO: use boost::adaptors.
-            const auto& device = pair.second;
-            if (device->ownersCount() != 0) {
+        for (const auto& device : m_devices | boost::adaptors::map_values) {
+            if (device->ownersCount() != 0)
                 return Error::eDeviceTaken;
-            }
         }
 
         m_devices.clear();

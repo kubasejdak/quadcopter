@@ -33,13 +33,11 @@
 #include "hal/Device.hpp"
 
 #include "hal/Error.hpp"
-#include "hal/IBoard.hpp"
 
 namespace hal {
 
-Device::Device(SharingPolicy sharingPolicy, IBoard& board)
+Device::Device(SharingPolicy sharingPolicy)
     : m_sharingPolicy(sharingPolicy)
-    , m_board(board)
 {}
 
 std::error_code Device::take()
@@ -57,21 +55,6 @@ std::error_code Device::give()
         return Error::eDeviceNotTaken;
 
     --m_ownersCount;
-    return Error::eOk;
-}
-
-std::error_code returnDevice(std::shared_ptr<Device>& device)
-{
-    if (!device)
-        return Error::eInvalidArgument;
-
-    if (device->ownersCount() == 0)
-        return Error::eDeviceNotTaken;
-
-    if (auto error = IBoard::GetBoard(device).returnDevice(device))
-        return error;
-
-    device.reset();
     return Error::eOk;
 }
 

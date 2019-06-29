@@ -30,37 +30,28 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#pragma once
+#include "BroadcomGpioMem.hpp"
 
-#include <cstdint>
-#include <memory>
-#include <system_error>
+namespace hal::gpio {
 
-namespace hal {
+BroadcomGpioMem::BroadcomGpioMem(BroadcomGpioInstance instance)
+    : m_instance(instance)
+{}
 
-enum class SharingPolicy { eSingle, eShared };
+std::error_code BroadcomGpioMem::drvRead(std::uint32_t& value, std::uint32_t mask)
+{
+    (void) value;
+    (void) mask;
 
-class IBoard;
+    return Error::eOk;
+}
 
-class Device {
-    friend class IBoard;
+std::error_code BroadcomGpioMem::drvWrite(std::uint32_t value, std::uint32_t mask)
+{
+    (void) value;
+    (void) mask;
 
-public:
-    explicit Device(SharingPolicy sharingPolicy);
-    [[nodiscard]] std::size_t ownersCount() const { return m_ownersCount; }
+    return Error::eOk;
+}
 
-private:
-    std::error_code take();
-    std::error_code give();
-    void setBoard(IBoard* board) { m_board = board; }
-    [[nodiscard]] IBoard* board() const { return m_board; }
-
-private:
-    SharingPolicy m_sharingPolicy;
-    IBoard* m_board{};
-    std::size_t m_ownersCount{};
-};
-
-std::error_code returnDevice(std::shared_ptr<Device>& device);
-
-} // namespace hal
+} // namespace hal::gpio
