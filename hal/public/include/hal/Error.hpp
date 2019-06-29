@@ -45,7 +45,8 @@ enum class Error {
     eDeviceNotTaken,
     eDeviceOpened,
     eDeviceNotOpened,
-    eTimeout
+    eTimeout,
+    eNotSupported
 };
 
 std::error_code make_error_code(Error);

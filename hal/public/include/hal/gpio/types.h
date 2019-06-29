@@ -32,44 +32,61 @@
 
 #pragma once
 
-#include "hal/Device.hpp"
-#include "hal/Error.hpp"
-#include "hal/gpio/IGpioPort.h"
+#include <cassert>
+#include <cstdint>
+#include <type_traits>
+#include <vector>
 
-#include <memory>
-#include <system_error>
+namespace hal::gpio {
 
-namespace hal {
-
-class IBoard {
-public:
-    virtual std::error_code init() = 0;
-    virtual std::error_code deinit() = 0;
-
-    template <typename IdType>
-    std::shared_ptr<Device> getDevice(IdType id)
-    {
-        if (auto device = getDeviceImpl(id)) {
-            if (auto error = device->take())
-                return nullptr;
-        }
-
-        return nullptr;
-    }
-
-    std::error_code returnDevice(std::shared_ptr<Device>& device)
-    {
-        if (auto error = returnDeviceImpl(device))
-            return error;
-
-        return device->give();
-    }
-
-    static IBoard& GetBoard(const std::shared_ptr<Device>& device) { return device->board(); }
-
-private:
-    virtual std::shared_ptr<Device> getDeviceImpl(int id) = 0;
-    virtual std::error_code returnDeviceImpl(std::shared_ptr<Device>& device) = 0;
+enum class Pin {
+    eBit0,
+    eBit1,
+    eBit2,
+    eBit3,
+    eBit4,
+    eBit5,
+    eBit6,
+    eBit7,
+    eBit8,
+    eBit9,
+    eBit10,
+    eBit11,
+    eBit12,
+    eBit13,
+    eBit14,
+    eBit15,
+    eBit16,
+    eBit17,
+    eBit18,
+    eBit19,
+    eBit20,
+    eBit21,
+    eBit22,
+    eBit23,
+    eBit24,
+    eBit25,
+    eBit26,
+    eBit27,
+    eBit28,
+    eBit29,
+    eBit30,
+    eBit31
 };
 
-} // namespace hal
+template <typename WidthType>
+constexpr bool isValidWidthType
+    = (std::is_unsigned<WidthType>::value && !std::is_same<WidthType, bool>::value && sizeof(WidthType) <= 4);
+
+template <typename WidthType>
+constexpr Pin maxPin()
+{
+    switch (sizeof(WidthType)) {
+        case 1: return Pin::eBit7;
+        case 2: return Pin::eBit15;
+        case 4: return Pin::eBit31;
+        default: assert(false);
+    }
+}
+
+} // namespace hal::gpio

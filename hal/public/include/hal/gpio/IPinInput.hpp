@@ -34,11 +34,17 @@
 
 #include "hal/Device.hpp"
 
+#include <system_error>
+
 namespace hal::gpio {
 
-class IBitOutput : public Devices {
+class IPinInput : public Device {
 public:
-    virtual void On() = 0;
+    explicit IPinInput(SharingPolicy sharingPolicy)
+        : Device(sharingPolicy)
+    {}
+
+    virtual std::error_code get(bool& value) = 0;
 };
 
 } // namespace hal::gpio
