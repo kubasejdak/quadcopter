@@ -46,7 +46,10 @@ enum class Error {
     eDeviceOpened,
     eDeviceNotOpened,
     eTimeout,
-    eNotSupported
+    eNotSupported,
+    ePathExists,
+    ePathDoesNotExist,
+    eFilesystemError
 };
 
 std::error_code make_error_code(Error);

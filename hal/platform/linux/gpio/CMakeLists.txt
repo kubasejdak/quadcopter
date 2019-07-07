@@ -1,11 +1,9 @@
-add_library(gpio
-    BroadcomGpioMem.cpp
-    )
+add_library(gpio INTERFACE)
 
 target_include_directories(gpio
-    PUBLIC .
+    INTERFACE .
     )
 
 target_link_libraries(gpio
-    PUBLIC hal_public hal_private
+    INTERFACE hal_public hal_private stdc++fs
     )

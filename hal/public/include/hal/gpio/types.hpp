@@ -32,6 +32,7 @@
 
 #pragma once
 
+#include <bitset>
 #include <cassert>
 #include <cstdint>
 #include <type_traits>
@@ -71,12 +72,49 @@ enum class Pin {
     eBit28,
     eBit29,
     eBit30,
-    eBit31
+    eBit31,
+    eBit32,
+    eBit33,
+    eBit34,
+    eBit35,
+    eBit36,
+    eBit37,
+    eBit38,
+    eBit39,
+    eBit40,
+    eBit41,
+    eBit42,
+    eBit43,
+    eBit44,
+    eBit45,
+    eBit46,
+    eBit47,
+    eBit48,
+    eBit49,
+    eBit50,
+    eBit51,
+    eBit52,
+    eBit53,
+    eBit54,
+    eBit55,
+    eBit56,
+    eBit57,
+    eBit58,
+    eBit59,
+    eBit60,
+    eBit61,
+    eBit62,
+    eBit63
 };
+
+constexpr int toInt(Pin pin)
+{
+    return static_cast<int>(pin);
+}
 
 template <typename WidthType>
 constexpr bool isValidWidthType
-    = (std::is_unsigned<WidthType>::value && !std::is_same<WidthType, bool>::value && sizeof(WidthType) <= 4);
+    = (std::is_unsigned<WidthType>::value && !std::is_same<WidthType, bool>::value && sizeof(WidthType) <= 8);
 
 template <typename WidthType>
 constexpr Pin maxPin()
@@ -85,8 +123,12 @@ constexpr Pin maxPin()
         case 1: return Pin::eBit7;
         case 2: return Pin::eBit15;
         case 4: return Pin::eBit31;
+        case 8: return Pin::eBit63;
         default: assert(false);
     }
 }
+
+template <typename WidthType>
+using PinMask = std::bitset<toInt(maxPin<WidthType>())>;
 
 } // namespace hal::gpio

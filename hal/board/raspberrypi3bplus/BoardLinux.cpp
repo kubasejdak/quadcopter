@@ -30,18 +30,21 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "BroadcomGpioMem.hpp"
+#include "SysFsGpio.hpp"
 #include "hal/Error.hpp"
-#include "hal/gpio/PinInput.hpp"
-#include "hal/gpio/PinOutput.hpp"
 #include "raspberrypi3bplus/Board.hpp"
+
+#include <cstdint>
 
 namespace hal {
 
 std::error_code RaspberryPi3BPlus::initImpl()
 {
     // clang-format off
-    gpio::BroadcomGpioMem gpio(gpio::BroadcomGpioInstance::eGpio0);
+    gpio::SysFsGpio<std::uint64_t> gpio("gpiochip0");
+    gpio.initPin(gpio::Pin::eBit9);
+    gpio.initPin(gpio::Pin::eBit10);
+    gpio.initPin(gpio::Pin::eBit11);
     // clang-format on
 
     return Error::eOk;

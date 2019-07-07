@@ -92,6 +92,29 @@ public:
     /// Virtual destructor.
     virtual ~IGpioPort() = default;
 
+    /// Initializes the given pin.
+    /// @param pin          Pin to be initialized.
+    /// @return Error code of the operation.
+    std::error_code initPin(Pin pin) { return drvInitPin(pin); }
+
+    /// Deinitializes the given pin.
+    /// @param pin          Pin to be deinitialized.
+    /// @return Error code of the operation.
+    std::error_code deinitPin(Pin pin) { return drvDeinitPin(pin); }
+
+    /// Sets the demanded mode to the given pin.
+    /// @param pin          Pin to be affected.
+    /// @param mode         Mode to be set.
+    /// @return Error code of the operation.
+    /// @note Mode is platform dependant.
+    std::error_code setPinMode(Pin pin, unsigned int mode) { return drvSetPinMode(pin, mode); }
+
+    /// Sets the direction of each pin in the GPIO port.
+    /// @param direction    Direction mask to be set.
+    /// @param mask         Mask indicating which pins should be affected.
+    /// @return Error code of the operation.
+    std::error_code setDirection(WidthType direction, WidthType mask) { return drvSetDirection(direction, mask); }
+
     /// Reads the demanded set of GPIO port bits defined by the mask.
     /// @tparam accessType  Demanded access type.
     /// @param data         Output argument where the read value will be stored.
@@ -115,6 +138,22 @@ public:
     }
 
 private:
+    /// Driver specific implementation of GPIO pin initialization.
+    /// @return Error code of the operation.
+    virtual std::error_code drvInitPin(Pin) { return Error::eOk; }
+
+    /// Driver specific implementation of GPIO pin deinitialization.
+    /// @return Error code of the operation.
+    virtual std::error_code drvDeinitPin(Pin) { return Error::eOk; }
+
+    /// Driver specific implementation of setting the GPIO pin mode.
+    /// @return Error code of the operation.
+    virtual std::error_code drvSetPinMode(Pin, unsigned int) = 0;
+
+    /// Driver specific implementation of setting the GPIO port direction.
+    /// @return Error code of the operation.
+    virtual std::error_code drvSetDirection(WidthType, WidthType) = 0;
+
     /// Driver specific implementation of GPIO port reading.
     /// @return Error code of the operation.
     virtual std::error_code drvRead(WidthType&, WidthType) { return Error::eNotSupported; }

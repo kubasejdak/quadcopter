@@ -6,5 +6,5 @@ target_include_directories(hal_private
 )
 
 target_link_libraries(hal_private
-    INTERFACE hal_public
+    INTERFACE hal_public Boost::boost
     )
