@@ -32,19 +32,20 @@
 
 #include "SysFsGpio.hpp"
 #include "hal/Error.hpp"
+#include "hal/gpio/PinOutput.hpp"
 #include "raspberrypi3bplus/Board.hpp"
 
 #include <cstdint>
+#include <memory>
 
 namespace hal {
 
 std::error_code RaspberryPi3BPlus::initImpl()
 {
     // clang-format off
-    gpio::SysFsGpio<std::uint64_t> gpio("gpiochip0");
-    gpio.initPin(gpio::Pin::eBit9);
-    gpio.initPin(gpio::Pin::eBit10);
-    gpio.initPin(gpio::Pin::eBit11);
+    auto gpio0 = std::make_shared<gpio::SysFsGpio<std::uint64_t>>("gpiochip0");
+
+    m_devices[device_id::eRaspberryPi3BPlusLed] = std::make_shared<gpio::PinOutput<std::uint64_t, gpio::Access::eReadWrite>>(gpio0, gpio::Pin::eBit21);
     // clang-format on
 
     return Error::eOk;

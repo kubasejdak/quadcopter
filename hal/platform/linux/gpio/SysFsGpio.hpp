@@ -214,7 +214,6 @@ private:
             valueFile << valueMask[i];
         }
 
-        value = static_cast<WidthType>(valueMask.to_ullong());
         return Error::eOk;
     }
 

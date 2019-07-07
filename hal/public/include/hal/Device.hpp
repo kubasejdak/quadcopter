@@ -49,6 +49,8 @@ public:
     explicit Device(SharingPolicy sharingPolicy);
     [[nodiscard]] std::size_t ownersCount() const { return m_ownersCount; }
 
+    virtual ~Device() = default;
+
 private:
     std::error_code take();
     std::error_code give();

@@ -71,6 +71,9 @@ public:
         , m_negated(negated)
     {
         assert(pin <= maxPin<WidthType>() && "Requested pin exceeds the width of the underlying port");
+
+        m_port->initPin(pin);
+        m_port->setDirection(~WidthType{0}, m_mask);
     }
 
 private:

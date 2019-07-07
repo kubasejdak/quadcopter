@@ -65,10 +65,13 @@ public:
               SharingPolicy sharingPolicy = SharingPolicy::eSingle)
         : IPinOutput(sharingPolicy)
         , m_port(port)
-        , m_mask(~(WidthType{1} << static_cast<WidthType>(pin)))
+        , m_mask((WidthType{1} << static_cast<WidthType>(pin)))
         , m_negated(negated)
     {
-        assert(pin <= maxPin<WidthType>() && "Requested pib exceeds the width of the underlying port");
+        assert(pin <= maxPin<WidthType>() && "Requested pin exceeds the width of the underlying port");
+
+        m_port->initPin(pin);
+        m_port->setDirection(WidthType{0}, m_mask);
     }
 
     /// Switches on the bit device.

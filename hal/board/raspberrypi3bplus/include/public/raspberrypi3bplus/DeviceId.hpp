@@ -32,12 +32,14 @@
 
 #pragma once
 
+#include "hal/Device.hpp"
+
 #include <memory>
 
 namespace hal {
 namespace device_id {
 
-enum RaspberryPi3BPlusId { eRaspberryPi3BPlusActLed };
+enum RaspberryPi3BPlusId { eRaspberryPi3BPlusLed };
 
 } // namespace device_id
 

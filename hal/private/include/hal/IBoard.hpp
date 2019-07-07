@@ -51,6 +51,8 @@ public:
         if (auto device = getDeviceImpl(id)) {
             if (auto error = device->take())
                 return nullptr;
+
+            return device;
         }
 
         return nullptr;
