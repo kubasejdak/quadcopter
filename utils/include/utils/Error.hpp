@@ -30,37 +30,27 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "version.hpp"
+#pragma once
 
-#include <hal/Hardware.hpp>
-#include <utils/logger.hpp>
+#include <system_error>
+#include <type_traits>
 
-#include <CLI/CLI.hpp>
-#include <spdlog/spdlog.h>
+namespace utils {
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
+enum class Error {
+    eOk,
+    eConsoleLoggerFailure,
+    eFileLoggerFailure,
+    eDefaultLoggerFailure
+};
 
-int main(int argc, char* argv[])
-{
-    CLI::App app;
-    app.add_flag_callback("-v,--version", []() {
-        std::printf("%s\n", cQuadcopterVersion);
-        std::exit(EXIT_SUCCESS);
-    });
+std::error_code make_error_code(Error);
 
-    CLI11_PARSE(app, argc, argv)
+} // namespace utils
 
-    if (utils::initLogger()) {
-        assert(false);
-        return EXIT_FAILURE;
-    }
+namespace std {
 
-    spdlog::info("Initialized logger");
+template <>
+struct is_error_code_enum<utils::Error> : true_type {};
 
-    hal::Hardware::init();
-    hal::Hardware::attach();
-
-    return EXIT_SUCCESS;
-}
+} // namespace std

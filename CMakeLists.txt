@@ -58,6 +58,7 @@ toolchain_showConfig()
 
 add_subdirectory(app)
 add_subdirectory(hal)
+add_subdirectory(utils)
 
 if (QUADCOPTER_TESTS)
     utils_log("Building quadcopter with tests")

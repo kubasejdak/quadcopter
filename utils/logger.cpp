@@ -30,37 +30,47 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "version.hpp"
+#include "utils/logger.hpp"
 
-#include <hal/Hardware.hpp>
-#include <utils/logger.hpp>
+#include "utils/Error.hpp"
 
-#include <CLI/CLI.hpp>
+#include <spdlog/sinks/rotating_file_sink.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
+#include <memory>
+#include <string_view>
 
-int main(int argc, char* argv[])
+namespace utils {
+
+constexpr std::string_view cDefaultLogFormat("[%d.%m.%Y %T.%e] [%t] [%l] %v");
+
+std::error_code initLogger()
 {
-    CLI::App app;
-    app.add_flag_callback("-v,--version", []() {
-        std::printf("%s\n", cQuadcopterVersion);
-        std::exit(EXIT_SUCCESS);
-    });
+    // Console logger: only warnings, errors and criticals.
+    auto console = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
+    if (!console)
+        return Error::eConsoleLoggerFailure;
 
-    CLI11_PARSE(app, argc, argv)
+    console->set_level(spdlog::level::warn);
+    console->set_pattern(cDefaultLogFormat.data());
 
-    if (utils::initLogger()) {
-        assert(false);
-        return EXIT_FAILURE;
-    }
+    // Rotating file logger: all logs, 3x 5MB files.
+    constexpr std::size_t cLogFileSize = 5 * 1024 * 1024;
+    constexpr std::size_t cLogFilesCount = 3;
+    auto file = std::make_shared<spdlog::sinks::rotating_file_sink_mt>("logs/quadcopter", cLogFileSize, cLogFilesCount);
+    if (!file)
+        return Error::eFileLoggerFailure;
 
-    spdlog::info("Initialized logger");
+    file->set_level(spdlog::level::trace);
+    file->set_pattern(cDefaultLogFormat.data());
 
-    hal::Hardware::init();
-    hal::Hardware::attach();
+    auto logger = std::make_shared<spdlog::logger>("multiSink", spdlog::sinks_init_list({console, file}));
+    if (!logger)
+        return Error::eDefaultLoggerFailure;
 
-    return EXIT_SUCCESS;
+    spdlog::set_default_logger(logger);
+    return Error::eOk;
 }
+
+} // namespace utils

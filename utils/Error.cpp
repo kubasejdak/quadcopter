@@ -30,37 +30,37 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "version.hpp"
+#include "utils/Error.hpp"
 
-#include <hal/Hardware.hpp>
-#include <utils/logger.hpp>
+#include <string>
 
-#include <CLI/CLI.hpp>
-#include <spdlog/spdlog.h>
+namespace utils {
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
+struct ErrorCategory : std::error_category {
+    [[nodiscard]] const char* name() const noexcept override;
+    [[nodiscard]] std::string message(int value) const override;
+};
 
-int main(int argc, char* argv[])
+const char* ErrorCategory::name() const noexcept
 {
-    CLI::App app;
-    app.add_flag_callback("-v,--version", []() {
-        std::printf("%s\n", cQuadcopterVersion);
-        std::exit(EXIT_SUCCESS);
-    });
-
-    CLI11_PARSE(app, argc, argv)
-
-    if (utils::initLogger()) {
-        assert(false);
-        return EXIT_FAILURE;
-    }
-
-    spdlog::info("Initialized logger");
-
-    hal::Hardware::init();
-    hal::Hardware::attach();
-
-    return EXIT_SUCCESS;
+    return "utils";
 }
+
+std::string ErrorCategory::message(int value) const
+{
+    switch (static_cast<Error>(value)) {
+        case Error::eConsoleLoggerFailure: return "failed to create the console logger";
+        case Error::eFileLoggerFailure: return "failed to create the file logger";
+        case Error::eDefaultLoggerFailure: return "failed to create the default logger";
+        default: return "(unrecognized error)";
+    }
+}
+
+const ErrorCategory errorCategory{};
+
+std::error_code make_error_code(Error error)
+{
+    return {static_cast<int>(error), errorCategory};
+}
+
+} // namespace utils

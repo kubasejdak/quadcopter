@@ -30,37 +30,12 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "version.hpp"
+#pragma once
 
-#include <hal/Hardware.hpp>
-#include <utils/logger.hpp>
+#include <system_error>
 
-#include <CLI/CLI.hpp>
-#include <spdlog/spdlog.h>
+namespace utils {
 
-#include <cassert>
-#include <cstdio>
-#include <cstdlib>
+std::error_code initLogger();
 
-int main(int argc, char* argv[])
-{
-    CLI::App app;
-    app.add_flag_callback("-v,--version", []() {
-        std::printf("%s\n", cQuadcopterVersion);
-        std::exit(EXIT_SUCCESS);
-    });
-
-    CLI11_PARSE(app, argc, argv)
-
-    if (utils::initLogger()) {
-        assert(false);
-        return EXIT_FAILURE;
-    }
-
-    spdlog::info("Initialized logger");
-
-    hal::Hardware::init();
-    hal::Hardware::attach();
-
-    return EXIT_SUCCESS;
-}
+} // namespace utils
