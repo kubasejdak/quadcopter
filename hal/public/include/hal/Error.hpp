@@ -45,6 +45,7 @@ enum class Error {
     eDeviceNotTaken,
     eDeviceOpened,
     eDeviceNotOpened,
+    eNoMemory,
     eTimeout,
     eNotSupported,
     ePathExists,

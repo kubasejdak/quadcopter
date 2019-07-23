@@ -30,47 +30,17 @@
 ///
 /////////////////////////////////////////////////////////////////////////////////////
 
-#include "hal/Error.hpp"
+#pragma once
 
-#include <string>
+#include <cstdint>
+#include <limits>
+#include <vector>
 
 namespace hal {
 
-struct ErrorCategory : std::error_category {
-    [[nodiscard]] const char* name() const noexcept override;
-    [[nodiscard]] std::string message(int value) const override;
-};
+using BytesVector = std::vector<std::uint8_t>;
 
-const char* ErrorCategory::name() const noexcept
-{
-    return "hal";
-}
-
-std::string ErrorCategory::message(int value) const
-{
-    switch (static_cast<Error>(value)) {
-        case Error::eOk: return "no error";
-        case Error::eInvalidArgument: return "invalid argument";
-        case Error::eWrongState: return "wrong state";
-        case Error::eDeviceTaken: return "device taken";
-        case Error::eDeviceNotTaken: return "device not taken";
-        case Error::eDeviceOpened: return "device opened";
-        case Error::eDeviceNotOpened: return "device not opened";
-        case Error::eNoMemory: return "no memory";
-        case Error::eTimeout: return "timeout occurred";
-        case Error::eNotSupported: return "operator not supported";
-        case Error::ePathExists: return "path already exists";
-        case Error::ePathDoesNotExist: return "path does not exist";
-        case Error::eFilesystemError: return "filesystem error";
-        default: return "(unrecognized error)";
-    }
-}
-
-const ErrorCategory errorCategory{};
-
-std::error_code make_error_code(Error error)
-{
-    return {static_cast<int>(error), errorCategory};
-}
+constexpr auto cTimeoutNone = std::numeric_limits<std::uint32_t>::min();
+constexpr auto cTimeoutInfinite = std::numeric_limits<std::uint32_t>::max();
 
 } // namespace hal
