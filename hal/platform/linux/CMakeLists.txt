@@ -1,5 +1,6 @@
 set(DRIVERS
     gpio
+    uart
 )
 
 foreach (DRIVER IN LISTS DRIVERS)
